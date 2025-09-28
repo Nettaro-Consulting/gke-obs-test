@@ -1,0 +1,345 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"Application","metadata":{"annotations":{},"name":"loki-stack","namespace":"argocd"},"spec":{"destination":{"namespace":"monitoring","server":"https://kubernetes.default.svc"},"project":"default","source":{"chart":"loki-stack","helm":{"values":"loki:\n  persistence:\n    enabled: true\n    size: 10Gi\n"},"repoURL":"https://grafana.github.io/helm-charts","targetRevision":"2.10.2"},"syncPolicy":{"automated":{"prune":true,"selfHeal":true}}}}
+  creationTimestamp: "2025-09-28T15:24:00Z"
+  generation: 107
+  name: loki-stack
+  namespace: argocd
+  resourceVersion: "1759086807943663018"
+  uid: 40188e85-e957-4e81-820c-ff6e02186ae8
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: loki-stack
+    helm:
+      values: |
+        loki:
+          persistence:
+            enabled: true
+            size: 10Gi
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 2.10.2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+status:
+  controllerNamespace: argocd
+  health:
+    lastTransitionTime: "2025-09-28T16:03:18Z"
+    status: Healthy
+  history:
+  - deployStartedAt: "2025-09-28T16:01:48Z"
+    deployedAt: "2025-09-28T16:01:51Z"
+    id: 0
+    initiatedBy:
+      automated: true
+    revision: 2.10.2
+    source:
+      chart: loki-stack
+      helm:
+        values: |
+          loki:
+            persistence:
+              enabled: true
+              size: 10Gi
+      repoURL: https://grafana.github.io/helm-charts
+      targetRevision: 2.10.2
+  - deployStartedAt: "2025-09-28T18:23:58Z"
+    deployedAt: "2025-09-28T18:24:00Z"
+    id: 1
+    initiatedBy:
+      username: admin
+    revision: 2.10.2
+    source:
+      chart: loki-stack
+      helm:
+        values: |
+          loki:
+            persistence:
+              enabled: true
+              size: 10Gi
+      repoURL: https://grafana.github.io/helm-charts
+      targetRevision: 2.10.2
+  operationState:
+    finishedAt: "2025-09-28T18:24:00Z"
+    message: successfully synced (all tasks run)
+    operation:
+      initiatedBy:
+        username: admin
+      retry: {}
+      sync:
+        revision: 2.10.2
+        syncStrategy:
+          hook: {}
+    phase: Succeeded
+    startedAt: "2025-09-28T18:23:58Z"
+    syncResult:
+      resources:
+      - group: ""
+        hookPhase: Running
+        kind: ServiceAccount
+        message: serviceaccount/loki-stack-promtail unchanged
+        name: loki-stack-promtail
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: ServiceAccount
+        message: serviceaccount/loki-stack unchanged
+        name: loki-stack
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Secret
+        message: secret/loki-stack unchanged
+        name: loki-stack
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Secret
+        message: secret/loki-stack-promtail configured
+        name: loki-stack-promtail
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: ConfigMap
+        message: configmap/loki-stack-test unchanged
+        name: loki-stack-test
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: ConfigMap
+        message: configmap/loki-stack unchanged
+        name: loki-stack
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Running
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/loki-stack-promtail reconciled.
+          clusterrole.rbac.authorization.k8s.io/loki-stack-promtail unchanged
+        name: loki-stack-promtail
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Running
+        kind: ClusterRoleBinding
+        message: clusterrolebinding.rbac.authorization.k8s.io/loki-stack-promtail
+          reconciled. clusterrolebinding.rbac.authorization.k8s.io/loki-stack-promtail
+          unchanged
+        name: loki-stack-promtail
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Running
+        kind: Role
+        message: role.rbac.authorization.k8s.io/loki-stack reconciled. role.rbac.authorization.k8s.io/loki-stack
+          unchanged
+        name: loki-stack
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Running
+        kind: RoleBinding
+        message: rolebinding.rbac.authorization.k8s.io/loki-stack reconciled. rolebinding.rbac.authorization.k8s.io/loki-stack
+          unchanged
+        name: loki-stack
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/loki-stack unchanged
+        name: loki-stack
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/loki-stack-headless unchanged
+        name: loki-stack-headless
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/loki-stack-memberlist unchanged
+        name: loki-stack-memberlist
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Running
+        images:
+        - docker.io/grafana/promtail:2.9.3
+        kind: DaemonSet
+        message: daemonset.apps/loki-stack-promtail unchanged
+        name: loki-stack-promtail
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Running
+        images:
+        - grafana/loki:2.6.1
+        kind: StatefulSet
+        message: statefulset.apps/loki-stack configured
+        name: loki-stack
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      revision: 2.10.2
+      source:
+        chart: loki-stack
+        helm:
+          values: |
+            loki:
+              persistence:
+                enabled: true
+                size: 10Gi
+        repoURL: https://grafana.github.io/helm-charts
+        targetRevision: 2.10.2
+  reconciledAt: "2025-09-28T19:13:27Z"
+  resourceHealthSource: appTree
+  resources:
+  - kind: ConfigMap
+    name: loki-stack
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: ConfigMap
+    name: loki-stack-test
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Secret
+    name: loki-stack
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Secret
+    name: loki-stack-promtail
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: loki-stack
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: loki-stack-headless
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: loki-stack-memberlist
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: loki-stack
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: loki-stack-promtail
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: DaemonSet
+    name: loki-stack-promtail
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: StatefulSet
+    name: loki-stack
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: loki-stack-promtail
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: loki-stack-promtail
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: loki-stack
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: loki-stack
+    namespace: monitoring
+    status: Synced
+    version: v1
+  sourceHydrator: {}
+  sourceType: Helm
+  summary:
+    images:
+    - docker.io/grafana/promtail:2.9.3
+    - grafana/loki:2.6.1
+  sync:
+    comparedTo:
+      destination:
+        namespace: monitoring
+        server: https://kubernetes.default.svc
+      source:
+        chart: loki-stack
+        helm:
+          values: |
+            loki:
+              persistence:
+                enabled: true
+                size: 10Gi
+        repoURL: https://grafana.github.io/helm-charts
+        targetRevision: 2.10.2
+    revision: 2.10.2
+    status: Synced

@@ -1,0 +1,1077 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    gemini-cli-force-sync: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"Application","metadata":{"annotations":{},"name":"mimir","namespace":"argocd"},"spec":{"destination":{"namespace":"monitoring","server":"https://kubernetes.default.svc"},"project":"default","source":{"chart":"mimir-distributed","repoURL":"https://grafana.github.io/helm-charts","targetRevision":"5.8.0"},"syncPolicy":{"automated":{"prune":true,"selfHeal":true}}}}
+  creationTimestamp: "2025-09-28T18:40:29Z"
+  generation: 57
+  name: mimir
+  namespace: argocd
+  resourceVersion: "1759086947343727020"
+  uid: 97b56b7c-6d33-45ab-bfb6-d4ebf79fbf38
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: mimir-distributed
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 5.8.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+status:
+  controllerNamespace: argocd
+  health:
+    lastTransitionTime: "2025-09-28T18:42:27Z"
+    status: Healthy
+  history:
+  - deployStartedAt: "2025-09-28T18:40:32Z"
+    deployedAt: "2025-09-28T18:42:36Z"
+    id: 0
+    initiatedBy:
+      automated: true
+    revision: 5.8.0
+    source:
+      chart: mimir-distributed
+      repoURL: https://grafana.github.io/helm-charts
+      targetRevision: 5.8.0
+  operationState:
+    finishedAt: "2025-09-28T18:42:36Z"
+    message: successfully synced (no more tasks)
+    operation:
+      initiatedBy:
+        automated: true
+      retry:
+        limit: 5
+      sync:
+        prune: true
+        revision: 5.8.0
+    phase: Succeeded
+    startedAt: "2025-09-28T18:40:32Z"
+    syncResult:
+      resources:
+      - group: policy
+        hookPhase: Succeeded
+        kind: PodDisruptionBudget
+        message: PodDisruptionBudget has InsufficientPods
+        name: mimir-distributor
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: policy
+        hookPhase: Succeeded
+        kind: PodDisruptionBudget
+        message: PodDisruptionBudget has InsufficientPods
+        name: mimir-querier
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: policy
+        hookPhase: Succeeded
+        kind: PodDisruptionBudget
+        message: PodDisruptionBudget has InsufficientPods
+        name: mimir-query-frontend
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: policy
+        hookPhase: Succeeded
+        kind: PodDisruptionBudget
+        message: PodDisruptionBudget has InsufficientPods
+        name: mimir-query-scheduler
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: policy
+        hookPhase: Succeeded
+        kind: PodDisruptionBudget
+        message: PodDisruptionBudget has InsufficientPods
+        name: mimir-ruler
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: policy
+        hookPhase: Succeeded
+        kind: PodDisruptionBudget
+        message: PodDisruptionBudget has InsufficientPods
+        name: mimir-alertmanager
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: policy
+        hookPhase: Succeeded
+        kind: PodDisruptionBudget
+        message: PodDisruptionBudget has InsufficientPods
+        name: mimir-compactor
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: policy
+        hookPhase: Succeeded
+        kind: PodDisruptionBudget
+        message: PodDisruptionBudget has InsufficientPods
+        name: mimir-nginx
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: policy
+        hookPhase: Succeeded
+        kind: PodDisruptionBudget
+        message: PodDisruptionBudget has InsufficientPods
+        name: mimir-ingester
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: policy
+        hookPhase: Succeeded
+        kind: PodDisruptionBudget
+        message: PodDisruptionBudget has InsufficientPods
+        name: mimir-overrides-exporter
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: policy
+        hookPhase: Succeeded
+        kind: PodDisruptionBudget
+        message: PodDisruptionBudget has InsufficientPods
+        name: mimir-store-gateway
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: ServiceAccount
+        message: serviceaccount/minio-sa created
+        name: minio-sa
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: ServiceAccount
+        message: serviceaccount/mimir-rollout-operator created
+        name: mimir-rollout-operator
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: ServiceAccount
+        message: serviceaccount/mimir created
+        name: mimir
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Secret
+        message: secret/mimir-minio created
+        name: mimir-minio
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: ConfigMap
+        message: configmap/mimir-alertmanager-fallback-config created
+        name: mimir-alertmanager-fallback-config
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: ConfigMap
+        message: configmap/mimir-runtime created
+        name: mimir-runtime
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: ConfigMap
+        message: configmap/mimir-nginx created
+        name: mimir-nginx
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: ConfigMap
+        message: configmap/mimir-config created
+        name: mimir-config
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: ConfigMap
+        message: configmap/mimir-minio created
+        name: mimir-minio
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: PersistentVolumeClaim
+        message: persistentvolumeclaim/mimir-minio created
+        name: mimir-minio
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: Role
+        message: "role.rbac.authorization.k8s.io/mimir-rollout-operator reconciled.
+          reconciliation required create\n\tmissing rules added:\n\t\t{Verbs:[list
+          get watch delete] APIGroups:[] Resources:[pods] ResourceNames:[] NonResourceURLs:[]}\n\t\t{Verbs:[list
+          get watch patch] APIGroups:[apps] Resources:[statefulsets] ResourceNames:[]
+          NonResourceURLs:[]}\n\t\t{Verbs:[update] APIGroups:[apps] Resources:[statefulsets/status]
+          ResourceNames:[] NonResourceURLs:[]}. role.rbac.authorization.k8s.io/mimir-rollout-operator
+          configured. Warning: resource roles/mimir-rollout-operator is missing the
+          kubectl.kubernetes.io/last-applied-configuration annotation which is required
+          by  apply.  apply should only be used on resources created declaratively
+          by either  create --save-config or  apply. The missing annotation will be
+          patched automatically."
+        name: mimir-rollout-operator
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: RoleBinding
+        message: "rolebinding.rbac.authorization.k8s.io/mimir-rollout-operator reconciled.
+          reconciliation required create\n\tmissing subjects added:\n\t\t{Kind:ServiceAccount
+          APIGroup: Name:mimir-rollout-operator Namespace:}. rolebinding.rbac.authorization.k8s.io/mimir-rollout-operator
+          configured. Warning: resource rolebindings/mimir-rollout-operator is missing
+          the kubectl.kubernetes.io/last-applied-configuration annotation which is
+          required by  apply.  apply should only be used on resources created declaratively
+          by either  create --save-config or  apply. The missing annotation will be
+          patched automatically."
+        name: mimir-rollout-operator
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-distributor created
+        name: mimir-distributor
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-overrides-exporter created
+        name: mimir-overrides-exporter
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-minio-console created
+        name: mimir-minio-console
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-ruler created
+        name: mimir-ruler
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-store-gateway-headless created
+        name: mimir-store-gateway-headless
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-minio created
+        name: mimir-minio
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-query-scheduler-headless created
+        name: mimir-query-scheduler-headless
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-alertmanager created
+        name: mimir-alertmanager
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-query-scheduler created
+        name: mimir-query-scheduler
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-alertmanager-headless created
+        name: mimir-alertmanager-headless
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-ingester-zone-c created
+        name: mimir-ingester-zone-c
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-compactor created
+        name: mimir-compactor
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-ingester-zone-a created
+        name: mimir-ingester-zone-a
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-distributor-headless created
+        name: mimir-distributor-headless
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-gossip-ring created
+        name: mimir-gossip-ring
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-ingester-headless created
+        name: mimir-ingester-headless
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-querier created
+        name: mimir-querier
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-ingester-zone-b created
+        name: mimir-ingester-zone-b
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-store-gateway-zone-a created
+        name: mimir-store-gateway-zone-a
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-query-frontend created
+        name: mimir-query-frontend
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-nginx created
+        name: mimir-nginx
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-store-gateway-zone-c created
+        name: mimir-store-gateway-zone-c
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/mimir-store-gateway-zone-b created
+        name: mimir-store-gateway-zone-b
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: Deployment
+        message: deployment.apps/mimir-distributor created
+        name: mimir-distributor
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: Deployment
+        message: deployment.apps/mimir-query-scheduler created
+        name: mimir-query-scheduler
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: Deployment
+        message: deployment.apps/mimir-overrides-exporter created
+        name: mimir-overrides-exporter
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: Deployment
+        message: deployment.apps/mimir-querier created
+        name: mimir-querier
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - docker.io/nginxinc/nginx-unprivileged:1.28-alpine
+        kind: Deployment
+        message: deployment.apps/mimir-nginx created
+        name: mimir-nginx
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: Deployment
+        message: deployment.apps/mimir-ruler created
+        name: mimir-ruler
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: Deployment
+        message: deployment.apps/mimir-query-frontend created
+        name: mimir-query-frontend
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/rollout-operator:v0.28.0
+        kind: Deployment
+        message: deployment.apps/mimir-rollout-operator created
+        name: mimir-rollout-operator
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - quay.io/minio/minio:RELEASE.2024-12-18T13-15-44Z
+        kind: Deployment
+        message: deployment.apps/mimir-minio created
+        name: mimir-minio
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: StatefulSet
+        message: statefulset has 1 ready pods
+        name: mimir-store-gateway-zone-b
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: StatefulSet
+        message: statefulset rolling update complete 1 pods at revision mimir-alertmanager-69764b7bcc...
+        name: mimir-alertmanager
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: StatefulSet
+        message: statefulset has 1 ready pods
+        name: mimir-ingester-zone-b
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: StatefulSet
+        message: statefulset rolling update complete 1 pods at revision mimir-compactor-559446695d...
+        name: mimir-compactor
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: StatefulSet
+        message: statefulset has 1 ready pods
+        name: mimir-store-gateway-zone-c
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: StatefulSet
+        message: statefulset has 1 ready pods
+        name: mimir-store-gateway-zone-a
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: StatefulSet
+        message: statefulset has 1 ready pods
+        name: mimir-ingester-zone-c
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - grafana/mimir:2.17.0
+        kind: StatefulSet
+        message: statefulset has 1 ready pods
+        name: mimir-ingester-zone-a
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: batch
+        hookPhase: Succeeded
+        images:
+        - quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z
+        kind: Job
+        message: Reached expected number of succeeded pods
+        name: mimir-make-minio-buckets-5.4.0
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: batch
+        hookPhase: Succeeded
+        hookType: PostSync
+        images:
+        - quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z
+        - quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z
+        kind: Job
+        message: Reached expected number of succeeded pods
+        name: mimir-minio-post-job
+        namespace: monitoring
+        syncPhase: PostSync
+        version: v1
+      revision: 5.8.0
+      source:
+        chart: mimir-distributed
+        repoURL: https://grafana.github.io/helm-charts
+        targetRevision: 5.8.0
+  reconciledAt: "2025-09-28T19:15:46Z"
+  resourceHealthSource: appTree
+  resources:
+  - kind: ConfigMap
+    name: mimir-alertmanager-fallback-config
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: ConfigMap
+    name: mimir-config
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: ConfigMap
+    name: mimir-minio
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: ConfigMap
+    name: mimir-nginx
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: ConfigMap
+    name: mimir-runtime
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: PersistentVolumeClaim
+    name: mimir-minio
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Secret
+    name: mimir-minio
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-alertmanager
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-alertmanager-headless
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-compactor
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-distributor
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-distributor-headless
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-gossip-ring
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-ingester-headless
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-ingester-zone-a
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-ingester-zone-b
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-ingester-zone-c
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-minio
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-minio-console
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-nginx
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-overrides-exporter
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-querier
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-query-frontend
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-query-scheduler
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-query-scheduler-headless
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-ruler
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-store-gateway-headless
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-store-gateway-zone-a
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-store-gateway-zone-b
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: mimir-store-gateway-zone-c
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: mimir
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: mimir-rollout-operator
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: minio-sa
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: mimir-distributor
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: mimir-minio
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: mimir-nginx
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: mimir-overrides-exporter
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: mimir-querier
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: mimir-query-frontend
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: mimir-query-scheduler
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: mimir-rollout-operator
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: mimir-ruler
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: StatefulSet
+    name: mimir-alertmanager
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: StatefulSet
+    name: mimir-compactor
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: StatefulSet
+    name: mimir-ingester-zone-a
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: StatefulSet
+    name: mimir-ingester-zone-b
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: StatefulSet
+    name: mimir-ingester-zone-c
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: StatefulSet
+    name: mimir-store-gateway-zone-a
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: StatefulSet
+    name: mimir-store-gateway-zone-b
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: StatefulSet
+    name: mimir-store-gateway-zone-c
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: batch
+    kind: Job
+    name: mimir-make-minio-buckets-5.4.0
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: policy
+    kind: PodDisruptionBudget
+    name: mimir-alertmanager
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: policy
+    kind: PodDisruptionBudget
+    name: mimir-compactor
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: policy
+    kind: PodDisruptionBudget
+    name: mimir-distributor
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: policy
+    kind: PodDisruptionBudget
+    name: mimir-ingester
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: policy
+    kind: PodDisruptionBudget
+    name: mimir-nginx
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: policy
+    kind: PodDisruptionBudget
+    name: mimir-overrides-exporter
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: policy
+    kind: PodDisruptionBudget
+    name: mimir-querier
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: policy
+    kind: PodDisruptionBudget
+    name: mimir-query-frontend
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: policy
+    kind: PodDisruptionBudget
+    name: mimir-query-scheduler
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: policy
+    kind: PodDisruptionBudget
+    name: mimir-ruler
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: policy
+    kind: PodDisruptionBudget
+    name: mimir-store-gateway
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: mimir-rollout-operator
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: mimir-rollout-operator
+    namespace: monitoring
+    status: Synced
+    version: v1
+  sourceHydrator: {}
+  sourceType: Helm
+  summary:
+    images:
+    - docker.io/nginxinc/nginx-unprivileged:1.28-alpine
+    - grafana/mimir:2.17.0
+    - grafana/rollout-operator:v0.28.0
+    - quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z
+    - quay.io/minio/minio:RELEASE.2024-12-18T13-15-44Z
+  sync:
+    comparedTo:
+      destination:
+        namespace: monitoring
+        server: https://kubernetes.default.svc
+      source:
+        chart: mimir-distributed
+        repoURL: https://grafana.github.io/helm-charts
+        targetRevision: 5.8.0
+    revision: 5.8.0
+    status: Synced

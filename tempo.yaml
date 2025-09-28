@@ -1,0 +1,381 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    gemini-cli-force-sync: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"Application","metadata":{"annotations":{},"name":"tempo","namespace":"argocd"},"spec":{"destination":{"namespace":"monitoring","server":"https://kubernetes.default.svc"},"project":"default","source":{"chart":"tempo-distributed","repoURL":"https://grafana.github.io/helm-charts","targetRevision":"1.48.0"},"syncPolicy":{"automated":{"prune":true,"selfHeal":true}}}}
+  creationTimestamp: "2025-09-28T18:40:29Z"
+  generation: 32
+  name: tempo
+  namespace: argocd
+  resourceVersion: "1759086916370095006"
+  uid: 8ef6a21f-f6a9-4448-913f-8249713016ba
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: tempo-distributed
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 1.48.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+status:
+  controllerNamespace: argocd
+  health:
+    lastTransitionTime: "2025-09-28T18:41:41Z"
+    status: Healthy
+  history:
+  - deployStartedAt: "2025-09-28T18:40:32Z"
+    deployedAt: "2025-09-28T18:40:46Z"
+    id: 0
+    initiatedBy:
+      automated: true
+    revision: 1.48.0
+    source:
+      chart: tempo-distributed
+      repoURL: https://grafana.github.io/helm-charts
+      targetRevision: 1.48.0
+  operationState:
+    finishedAt: "2025-09-28T18:40:46Z"
+    message: successfully synced (all tasks run)
+    operation:
+      initiatedBy:
+        automated: true
+      retry:
+        limit: 5
+      sync:
+        prune: true
+        revision: 1.48.0
+    phase: Succeeded
+    startedAt: "2025-09-28T18:40:32Z"
+    syncResult:
+      resources:
+      - group: policy
+        hookPhase: Running
+        kind: PodDisruptionBudget
+        message: poddisruptionbudget.policy/tempo-ingester created
+        name: tempo-ingester
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: ServiceAccount
+        message: serviceaccount/tempo created
+        name: tempo
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: ConfigMap
+        message: configmap/tempo-runtime created
+        name: tempo-runtime
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: ConfigMap
+        message: configmap/tempo-config created
+        name: tempo-config
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/tempo-query-frontend-discovery created
+        name: tempo-query-frontend-discovery
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/tempo-ingester-discovery created
+        name: tempo-ingester-discovery
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/tempo-distributor-discovery created
+        name: tempo-distributor-discovery
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/tempo-gossip-ring created
+        name: tempo-gossip-ring
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/tempo-compactor created
+        name: tempo-compactor
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/tempo-ingester created
+        name: tempo-ingester
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/tempo-query-frontend created
+        name: tempo-query-frontend
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/tempo-distributor created
+        name: tempo-distributor
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/tempo-querier created
+        name: tempo-querier
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/tempo-memcached created
+        name: tempo-memcached
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Running
+        images:
+        - docker.io/grafana/tempo:2.8.2
+        kind: Deployment
+        message: deployment.apps/tempo-query-frontend created
+        name: tempo-query-frontend
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Running
+        images:
+        - docker.io/grafana/tempo:2.8.2
+        kind: Deployment
+        message: deployment.apps/tempo-querier created
+        name: tempo-querier
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Running
+        images:
+        - docker.io/grafana/tempo:2.8.2
+        kind: Deployment
+        message: deployment.apps/tempo-distributor created
+        name: tempo-distributor
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Running
+        images:
+        - docker.io/grafana/tempo:2.8.2
+        kind: Deployment
+        message: deployment.apps/tempo-compactor created
+        name: tempo-compactor
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Running
+        images:
+        - docker.io/memcached:1.6.33-alpine
+        kind: StatefulSet
+        message: statefulset.apps/tempo-memcached created
+        name: tempo-memcached
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Running
+        images:
+        - docker.io/grafana/tempo:2.8.2
+        kind: StatefulSet
+        message: statefulset.apps/tempo-ingester created
+        name: tempo-ingester
+        namespace: monitoring
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      revision: 1.48.0
+      source:
+        chart: tempo-distributed
+        repoURL: https://grafana.github.io/helm-charts
+        targetRevision: 1.48.0
+  reconciledAt: "2025-09-28T19:15:16Z"
+  resourceHealthSource: appTree
+  resources:
+  - kind: ConfigMap
+    name: tempo-config
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: ConfigMap
+    name: tempo-runtime
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: tempo-compactor
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: tempo-distributor
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: tempo-distributor-discovery
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: tempo-gossip-ring
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: tempo-ingester
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: tempo-ingester-discovery
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: tempo-memcached
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: tempo-querier
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: tempo-query-frontend
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: Service
+    name: tempo-query-frontend-discovery
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: tempo
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: tempo-compactor
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: tempo-distributor
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: tempo-querier
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: tempo-query-frontend
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: StatefulSet
+    name: tempo-ingester
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: apps
+    kind: StatefulSet
+    name: tempo-memcached
+    namespace: monitoring
+    status: Synced
+    version: v1
+  - group: policy
+    kind: PodDisruptionBudget
+    name: tempo-ingester
+    namespace: monitoring
+    status: Synced
+    version: v1
+  sourceHydrator: {}
+  sourceType: Helm
+  summary:
+    images:
+    - docker.io/grafana/tempo:2.8.2
+    - docker.io/memcached:1.6.33-alpine
+  sync:
+    comparedTo:
+      destination:
+        namespace: monitoring
+        server: https://kubernetes.default.svc
+      source:
+        chart: tempo-distributed
+        repoURL: https://grafana.github.io/helm-charts
+        targetRevision: 1.48.0
+    revision: 1.48.0
+    status: Synced

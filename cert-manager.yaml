@@ -1,0 +1,833 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"Application","metadata":{"annotations":{},"name":"cert-manager","namespace":"argocd"},"spec":{"destination":{"namespace":"cert-manager","server":"https://kubernetes.default.svc"},"project":"default","source":{"chart":"cert-manager","helm":{"values":"installCRDs: true\n"},"repoURL":"https://charts.jetstack.io","targetRevision":"v1.15.1"},"syncPolicy":{"automated":{"prune":true,"selfHeal":true}}}}
+  creationTimestamp: "2025-09-28T16:19:55Z"
+  generation: 88
+  name: cert-manager
+  namespace: argocd
+  resourceVersion: "1759086824246783004"
+  uid: 88207a35-c9a3-40d8-a436-4dc08b9c1cd6
+spec:
+  destination:
+    namespace: cert-manager
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: cert-manager
+    helm:
+      values: |
+        installCRDs: true
+    repoURL: https://charts.jetstack.io
+    targetRevision: v1.15.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+status:
+  controllerNamespace: argocd
+  health:
+    lastTransitionTime: "2025-09-28T16:20:22Z"
+    status: Healthy
+  history:
+  - deployStartedAt: "2025-09-28T16:19:57Z"
+    deployedAt: "2025-09-28T16:20:49Z"
+    id: 0
+    initiatedBy:
+      automated: true
+    revision: v1.15.1
+    source:
+      chart: cert-manager
+      helm:
+        values: |
+          installCRDs: true
+      repoURL: https://charts.jetstack.io
+      targetRevision: v1.15.1
+  operationState:
+    finishedAt: "2025-09-28T16:20:49Z"
+    message: successfully synced (no more tasks)
+    operation:
+      initiatedBy:
+        automated: true
+      retry:
+        limit: 5
+      sync:
+        prune: true
+        revision: v1.15.1
+    phase: Succeeded
+    retryCount: 1
+    startedAt: "2025-09-28T16:19:57Z"
+    syncResult:
+      resources:
+      - group: ""
+        hookPhase: Succeeded
+        kind: ServiceAccount
+        message: serviceaccount/cert-manager-cainjector unchanged
+        name: cert-manager-cainjector
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: ServiceAccount
+        message: serviceaccount/cert-manager-webhook unchanged
+        name: cert-manager-webhook
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: ServiceAccount
+        message: serviceaccount/cert-manager unchanged
+        name: cert-manager
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apiextensions.k8s.io
+        hookPhase: Succeeded
+        kind: CustomResourceDefinition
+        message: CRD is healthy
+        name: orders.acme.cert-manager.io
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apiextensions.k8s.io
+        hookPhase: Succeeded
+        kind: CustomResourceDefinition
+        message: CRD is healthy
+        name: certificaterequests.cert-manager.io
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apiextensions.k8s.io
+        hookPhase: Succeeded
+        kind: CustomResourceDefinition
+        message: CRD is healthy
+        name: certificates.cert-manager.io
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apiextensions.k8s.io
+        hookPhase: Succeeded
+        kind: CustomResourceDefinition
+        message: CRD is healthy
+        name: challenges.acme.cert-manager.io
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apiextensions.k8s.io
+        hookPhase: Succeeded
+        kind: CustomResourceDefinition
+        message: CRD is healthy
+        name: issuers.cert-manager.io
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apiextensions.k8s.io
+        hookPhase: Succeeded
+        kind: CustomResourceDefinition
+        message: CRD is healthy
+        name: clusterissuers.cert-manager.io
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-controller-orders
+          reconciled. clusterrole.rbac.authorization.k8s.io/cert-manager-controller-orders
+          unchanged
+        name: cert-manager-controller-orders
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-controller-certificates
+          reconciled. clusterrole.rbac.authorization.k8s.io/cert-manager-controller-certificates
+          unchanged
+        name: cert-manager-controller-certificates
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews
+          reconciled. clusterrole.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews
+          unchanged
+        name: cert-manager-webhook:subjectaccessreviews
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-cluster-view reconciled.
+          clusterrole.rbac.authorization.k8s.io/cert-manager-cluster-view unchanged
+        name: cert-manager-cluster-view
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-controller-certificatesigningrequests
+          reconciled. clusterrole.rbac.authorization.k8s.io/cert-manager-controller-certificatesigningrequests
+          unchanged
+        name: cert-manager-controller-certificatesigningrequests
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers
+          reconciled. clusterrole.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers
+          unchanged
+        name: cert-manager-controller-clusterissuers
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-controller-issuers
+          reconciled. clusterrole.rbac.authorization.k8s.io/cert-manager-controller-issuers
+          unchanged
+        name: cert-manager-controller-issuers
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-cainjector reconciled.
+          clusterrole.rbac.authorization.k8s.io/cert-manager-cainjector unchanged
+        name: cert-manager-cainjector
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-controller-challenges
+          reconciled. clusterrole.rbac.authorization.k8s.io/cert-manager-controller-challenges
+          unchanged
+        name: cert-manager-controller-challenges
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim
+          reconciled. clusterrole.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim
+          unchanged
+        name: cert-manager-controller-ingress-shim
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-edit reconciled.
+          clusterrole.rbac.authorization.k8s.io/cert-manager-edit unchanged
+        name: cert-manager-edit
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-view reconciled.
+          clusterrole.rbac.authorization.k8s.io/cert-manager-view unchanged
+        name: cert-manager-view
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRole
+        message: clusterrole.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io
+          reconciled. clusterrole.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io
+          unchanged
+        name: cert-manager-controller-approve:cert-manager-io
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRoleBinding
+        message: clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-certificates
+          reconciled. clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-certificates
+          unchanged
+        name: cert-manager-controller-certificates
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRoleBinding
+        message: clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers
+          reconciled. clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers
+          unchanged
+        name: cert-manager-controller-clusterissuers
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRoleBinding
+        message: clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-certificatesigningrequests
+          reconciled. clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-certificatesigningrequests
+          unchanged
+        name: cert-manager-controller-certificatesigningrequests
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRoleBinding
+        message: clusterrolebinding.rbac.authorization.k8s.io/cert-manager-cainjector
+          reconciled. clusterrolebinding.rbac.authorization.k8s.io/cert-manager-cainjector
+          unchanged
+        name: cert-manager-cainjector
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRoleBinding
+        message: clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-challenges
+          reconciled. clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-challenges
+          unchanged
+        name: cert-manager-controller-challenges
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRoleBinding
+        message: clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-issuers
+          reconciled. clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-issuers
+          unchanged
+        name: cert-manager-controller-issuers
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRoleBinding
+        message: clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim
+          reconciled. clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim
+          unchanged
+        name: cert-manager-controller-ingress-shim
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRoleBinding
+        message: clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-orders
+          reconciled. clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-orders
+          unchanged
+        name: cert-manager-controller-orders
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRoleBinding
+        message: clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io
+          reconciled. clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io
+          unchanged
+        name: cert-manager-controller-approve:cert-manager-io
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: ClusterRoleBinding
+        message: clusterrolebinding.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews
+          reconciled. clusterrolebinding.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews
+          configured
+        name: cert-manager-webhook:subjectaccessreviews
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: Role
+        message: role.rbac.authorization.k8s.io/cert-manager:leaderelection reconciled.
+          role.rbac.authorization.k8s.io/cert-manager:leaderelection unchanged
+        name: cert-manager:leaderelection
+        namespace: kube-system
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: Role
+        message: role.rbac.authorization.k8s.io/cert-manager-webhook:dynamic-serving
+          reconciled. role.rbac.authorization.k8s.io/cert-manager-webhook:dynamic-serving
+          unchanged
+        name: cert-manager-webhook:dynamic-serving
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: Role
+        message: role.rbac.authorization.k8s.io/cert-manager-cainjector:leaderelection
+          reconciled. role.rbac.authorization.k8s.io/cert-manager-cainjector:leaderelection
+          unchanged
+        name: cert-manager-cainjector:leaderelection
+        namespace: kube-system
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: RoleBinding
+        message: rolebinding.rbac.authorization.k8s.io/cert-manager-cainjector:leaderelection
+          reconciled. rolebinding.rbac.authorization.k8s.io/cert-manager-cainjector:leaderelection
+          unchanged
+        name: cert-manager-cainjector:leaderelection
+        namespace: kube-system
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: RoleBinding
+        message: rolebinding.rbac.authorization.k8s.io/cert-manager-webhook:dynamic-serving
+          reconciled. rolebinding.rbac.authorization.k8s.io/cert-manager-webhook:dynamic-serving
+          configured
+        name: cert-manager-webhook:dynamic-serving
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        kind: RoleBinding
+        message: rolebinding.rbac.authorization.k8s.io/cert-manager:leaderelection
+          reconciled. rolebinding.rbac.authorization.k8s.io/cert-manager:leaderelection
+          configured
+        name: cert-manager:leaderelection
+        namespace: kube-system
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/cert-manager unchanged
+        name: cert-manager
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        kind: Service
+        message: service/cert-manager-webhook unchanged
+        name: cert-manager-webhook
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - quay.io/jetstack/cert-manager-cainjector:v1.15.1
+        kind: Deployment
+        message: deployment.apps/cert-manager-cainjector unchanged
+        name: cert-manager-cainjector
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - quay.io/jetstack/cert-manager-controller:v1.15.1
+        kind: Deployment
+        message: deployment.apps/cert-manager unchanged
+        name: cert-manager
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Succeeded
+        images:
+        - quay.io/jetstack/cert-manager-webhook:v1.15.1
+        kind: Deployment
+        message: deployment.apps/cert-manager-webhook unchanged
+        name: cert-manager-webhook
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: admissionregistration.k8s.io
+        hookPhase: Succeeded
+        kind: ValidatingWebhookConfiguration
+        message: validatingwebhookconfiguration.admissionregistration.k8s.io/cert-manager-webhook
+          configured
+        name: cert-manager-webhook
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: admissionregistration.k8s.io
+        hookPhase: Succeeded
+        kind: MutatingWebhookConfiguration
+        message: mutatingwebhookconfiguration.admissionregistration.k8s.io/cert-manager-webhook
+          configured
+        name: cert-manager-webhook
+        namespace: cert-manager
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: ""
+        hookPhase: Succeeded
+        hookType: PostSync
+        kind: ServiceAccount
+        message: cert-manager-startupapicheck created
+        name: cert-manager-startupapicheck
+        namespace: cert-manager
+        syncPhase: PostSync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        hookType: PostSync
+        kind: Role
+        message: cert-manager-startupapicheck:create-cert created
+        name: cert-manager-startupapicheck:create-cert
+        namespace: cert-manager
+        syncPhase: PostSync
+        version: v1
+      - group: rbac.authorization.k8s.io
+        hookPhase: Succeeded
+        hookType: PostSync
+        kind: RoleBinding
+        message: cert-manager-startupapicheck:create-cert created
+        name: cert-manager-startupapicheck:create-cert
+        namespace: cert-manager
+        syncPhase: PostSync
+        version: v1
+      - group: batch
+        hookPhase: Succeeded
+        hookType: PostSync
+        images:
+        - quay.io/jetstack/cert-manager-startupapicheck:v1.15.1
+        kind: Job
+        message: Reached expected number of succeeded pods
+        name: cert-manager-startupapicheck
+        namespace: cert-manager
+        syncPhase: PostSync
+        version: v1
+      revision: v1.15.1
+      source:
+        chart: cert-manager
+        helm:
+          values: |
+            installCRDs: true
+        repoURL: https://charts.jetstack.io
+        targetRevision: v1.15.1
+  reconciledAt: "2025-09-28T19:13:43Z"
+  resourceHealthSource: appTree
+  resources:
+  - kind: Service
+    name: cert-manager
+    namespace: cert-manager
+    status: Synced
+    version: v1
+  - kind: Service
+    name: cert-manager-webhook
+    namespace: cert-manager
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: cert-manager
+    namespace: cert-manager
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: cert-manager-cainjector
+    namespace: cert-manager
+    status: Synced
+    version: v1
+  - kind: ServiceAccount
+    name: cert-manager-webhook
+    namespace: cert-manager
+    status: Synced
+    version: v1
+  - group: admissionregistration.k8s.io
+    kind: MutatingWebhookConfiguration
+    name: cert-manager-webhook
+    status: Synced
+    version: v1
+  - group: admissionregistration.k8s.io
+    kind: ValidatingWebhookConfiguration
+    name: cert-manager-webhook
+    status: Synced
+    version: v1
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: certificaterequests.cert-manager.io
+    status: Synced
+    version: v1
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: certificates.cert-manager.io
+    status: Synced
+    version: v1
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: challenges.acme.cert-manager.io
+    status: Synced
+    version: v1
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: clusterissuers.cert-manager.io
+    status: Synced
+    version: v1
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: issuers.cert-manager.io
+    status: Synced
+    version: v1
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: orders.acme.cert-manager.io
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: cert-manager
+    namespace: cert-manager
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: cert-manager-cainjector
+    namespace: cert-manager
+    status: Synced
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: cert-manager-webhook
+    namespace: cert-manager
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-cainjector
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-cluster-view
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-approve:cert-manager-io
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-certificates
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-certificatesigningrequests
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-challenges
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-clusterissuers
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-ingress-shim
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-issuers
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-orders
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-edit
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-view
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-webhook:subjectaccessreviews
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-cainjector
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-approve:cert-manager-io
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-certificates
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-certificatesigningrequests
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-challenges
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-clusterissuers
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-ingress-shim
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-issuers
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-orders
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-webhook:subjectaccessreviews
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: cert-manager-webhook:dynamic-serving
+    namespace: cert-manager
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: cert-manager-cainjector:leaderelection
+    namespace: kube-system
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: cert-manager:leaderelection
+    namespace: kube-system
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: cert-manager-webhook:dynamic-serving
+    namespace: cert-manager
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: cert-manager-cainjector:leaderelection
+    namespace: kube-system
+    status: Synced
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: cert-manager:leaderelection
+    namespace: kube-system
+    status: Synced
+    version: v1
+  sourceHydrator: {}
+  sourceType: Helm
+  summary:
+    images:
+    - quay.io/jetstack/cert-manager-cainjector:v1.15.1
+    - quay.io/jetstack/cert-manager-controller:v1.15.1
+    - quay.io/jetstack/cert-manager-webhook:v1.15.1
+  sync:
+    comparedTo:
+      destination:
+        namespace: cert-manager
+        server: https://kubernetes.default.svc
+      source:
+        chart: cert-manager
+        helm:
+          values: |
+            installCRDs: true
+        repoURL: https://charts.jetstack.io
+        targetRevision: v1.15.1
+    revision: v1.15.1
+    status: Synced
