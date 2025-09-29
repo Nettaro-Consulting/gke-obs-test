@@ -1,74 +1,77 @@
-# GKE Observability Test - Generación y Envío de Telemetría
+# Deployment de Stack de Observabilidad con Argo CD y Envío de Telemetría
 
-Este proyecto demuestra cómo generar y enviar logs a Loki y trazas a Tempo desde una aplicación externa a un clúster de GKE, utilizando Nginx Ingress Controller y cert-manager para la exposición externa y la seguridad.
+Este `README.md` detalla cómo desplegar el stack de observabilidad (Loki y Tempo) en un clúster de GKE utilizando Argo CD con el patrón "apps of apps", y cómo enviar telemetría (logs y trazas) a estos servicios.
 
-## Componentes de Observabilidad
+## 1. Estructura del Repositorio
 
-*   **Loki:** Sistema de agregación de logs de Grafana.
-*   **Tempo:** Sistema de almacenamiento de trazas distribuidas de Grafana.
-*   **Nginx Ingress Controller:** Gestiona el acceso externo a los servicios del clúster.
-*   **cert-manager:** Automatiza la gestión de certificados TLS.
+El repositorio está organizado para facilitar el despliegue con Argo CD utilizando el patrón "apps of apps":
 
-## Configuración de Kubernetes
-
-Para que la aplicación externa pueda comunicarse con Loki y Tempo, hemos configurado Ingresses para exponer estos servicios de forma segura.
-
-### 1. Instalación del Nginx Ingress Controller
-
-Si aún no lo tienes instalado, el Nginx Ingress Controller es necesario. Se instaló usando Helm con los siguientes comandos:
-
-```bash
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace ingress-nginx
+```
+.exported-apps/
+├── argocd-apps/
+│   ├── all-observability-apps.yaml       # Aplicación padre de Argo CD (apps of apps)
+│   ├── jaeger-operator.yaml              # Aplicación Argo CD para Jaeger Operator
+│   ├── loki-stack.yaml                   # Aplicación Argo CD para Loki
+│   ├── observability-ingresses-app.yaml  # Aplicación Argo CD para los Ingresses
+│   ├── tempo.yaml                        # Aplicación Argo CD para Tempo
+│   └── ingresses/                        # Directorio con los manifiestos de Ingress
+│       ├── loki-ingress.yaml
+│       └── tempo-ingress.yaml
+├── requirements.txt                      # Dependencias de la aplicación Python
+├── send_telemetry.py                     # Aplicación Python para enviar telemetría
+└── README.md                             # Este archivo
 ```
 
-### 2. Configuración de Ingress para Loki y Tempo
+## 2. Deployment del Stack de Observabilidad con Argo CD
 
-Se han creado dos recursos Ingress para exponer Loki y Tempo:
+### Prerrequisitos
 
-*   **`loki-ingress.yaml`**: Expone Loki en `https://loki.nettaro.com`.
-*   **`tempo-ingress.yaml`**: Expone Tempo en `https://tempo.nettaro.com` para la ingesta de trazas OTLP (HTTP y gRPC).
+Antes de proceder, asegúrate de tener lo siguiente en tu clúster de GKE:
 
-Estos archivos se aplicaron al clúster:
+*   **Argo CD:** Instalado y configurado.
+*   **Nginx Ingress Controller:** Instalado y funcionando. Si no lo tienes, puedes instalarlo con Helm:
+    ```bash
+    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+    helm repo update
+    helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace ingress-nginx
+    ```
+*   **cert-manager:** Instalado y configurado, con un `Issuer` o `ClusterIssuer` llamado `selfsigned-issuer` (o el nombre que hayas configurado) en el namespace `monitoring`.
 
-```bash
-kubectl apply -f loki-ingress.yaml
-kubectl apply -f tempo-ingress.yaml
-```
+### Pasos de Deployment
 
-### 3. Configuración de Argo CD para Tempo
+1.  **Clona este repositorio** en tu máquina local.
 
-El archivo `tempo.yaml` (aplicación de Argo CD) fue modificado para incluir un archivo de valores personalizado (`tempo-custom-values.yaml`) que habilita el componente `gateway` de Tempo y su Ingress.
+2.  **Aplica la aplicación padre de Argo CD** a tu clúster. Esta aplicación se encargará de desplegar todas las aplicaciones hijas definidas en el directorio `argocd-apps/`.
 
-**Es crucial que la aplicación `tempo` en Argo CD se sincronice correctamente** para que estos cambios se apliquen en el clúster.
+    ```bash
+    kubectl apply -f argocd-apps/all-observability-apps.yaml
+    ```
 
-### 4. Configuración de DNS
+3.  **Verifica en la UI de Argo CD:** Accede a la interfaz de usuario de Argo CD. Deberías ver la aplicación `all-observability-apps` y, dentro de ella, las aplicaciones hijas (`loki-stack`, `jaeger-operator`, `tempo`, `observability-ingresses`). Asegúrate de que todas se sincronicen y estén `Healthy`.
 
-Debes configurar los registros DNS para los siguientes dominios, apuntándolos a la **dirección IP externa de tu Nginx Ingress Controller**:
+### Configuración Post-Deployment
 
-*   `loki.nettaro.com`
-*   `tempo.nettaro.com`
+1.  **Configuración de DNS:**
+    Debes configurar los registros DNS para los siguientes dominios, apuntándolos a la **dirección IP externa de tu Nginx Ingress Controller**:
 
-Puedes obtener la IP externa de tu Ingress Controller con:
+    *   `loki.nettaro.com`
+    *   `tempo.nettaro.com`
 
-```bash
-kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
-```
+    Puedes obtener la IP externa de tu Ingress Controller con:
+    ```bash
+    kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+    ```
 
-### 5. Verificación de Certificados TLS
+2.  **Verificación de Certificados TLS:**
+    `cert-manager` se encarga de emitir los certificados TLS para los dominios configurados. Puedes verificar su estado con:
+    ```bash
+    kubectl get certificate -n monitoring
+    ```
+    Asegúrate de que ambos certificados (`loki-tls` y `tempo-tls`) muestren `READY: True`.
 
-`cert-manager` se encarga de emitir los certificados TLS para `loki.nettaro.com` y `tempo.nettaro.com` utilizando el `selfsigned-issuer`. Puedes verificar el estado de los certificados con:
+## 3. Envío de Telemetría
 
-```bash
-kubectl get certificate -n monitoring
-```
-
-Asegúrate de que ambos certificados (`loki-tls` y `tempo-tls`) muestren `READY: True`.
-
-## Aplicación de Telemetría (Python)
-
-Hemos creado una pequeña aplicación en Python (`send_telemetry.py`) para demostrar el envío de logs y trazas.
+Una vez que el stack de observabilidad esté desplegado y accesible, puedes usar la aplicación Python `send_telemetry.py` para enviar logs y trazas de ejemplo.
 
 ### 1. Dependencias
 
@@ -80,13 +83,13 @@ opentelemetry-sdk
 opentelemetry-exporter-otlp-proto-http
 ```
 
-### 2. Ejecución de la Aplicación
+### 2. Pasos para Enviar Telemetría
 
-1.  **Navega al directorio del proyecto:**
+1.  **Navega al directorio del proyecto** (donde se encuentran `send_telemetry.py` y `requirements.txt`):
     ```bash
-    cd /Users/rubencarrasco/exported-apps
+    cd /ruta/a/tu/repositorio
     ```
-2.  **Instala las dependencias:**
+2.  **Instala las dependencias de Python:**
     ```bash
     pip install -r requirements.txt
     ```
@@ -95,18 +98,16 @@ opentelemetry-exporter-otlp-proto-http
     python send_telemetry.py
     ```
 
-El script enviará logs a `https://loki.nettaro.com/loki/api/v1/push` y trazas OTLP (HTTP) a `https://tempo.nettaro.com/v1/traces`. Estas URLs se pueden sobrescribir mediante las variables de entorno `LOKI_URL` y `TEMPO_OTLP_HTTP_ENDPOINT` respectivamente.
+    El script enviará logs a `https://loki.nettaro.com/loki/api/v1/push` y trazas OTLP (HTTP) a `https://tempo.nettaro.com/v1/traces`.
 
-## Verificación de Datos
+    Puedes sobrescribir estas URLs mediante las variables de entorno `LOKI_URL` y `TEMPO_OTLP_HTTP_ENDPOINT` respectivamente, por ejemplo:
+    ```bash
+    LOKI_URL="https://my-custom-loki.com/loki/api/v1/push" TEMPO_OTLP_HTTP_ENDPOINT="https://my-custom-tempo.com/v1/traces" python send_telemetry.py
+    ```
+
+## 4. Verificación de Datos
 
 Una vez que la aplicación Python se haya ejecutado, podrás verificar los logs y trazas en tu interfaz de Grafana, configurada para usar Loki y Tempo como fuentes de datos.
 
 *   **Logs en Loki:** Busca logs con la etiqueta `application=my-external-app`.
 *   **Trazas en Tempo:** Busca trazas generadas por el servicio `my-external-app`.
-
-   1. Configured Ingress resources for Loki and Tempo, exposing them via loki.nettaro.com and tempo.nettaro.com respectively, with TLS certificates managed
-      by cert-manager.
-   2. Created a Python application (send_telemetry.py) that sends sample logs to Loki and traces to Tempo using OpenTelemetry.
-   3. Created a README.md file with detailed instructions on how to set up the Kubernetes configurations, run the Python application, and verify the
-      telemetry data.
-   4. Pushed all the changes to your Git repository https://github.com/Nettaro-Consulting/gke-obs-test.git.
