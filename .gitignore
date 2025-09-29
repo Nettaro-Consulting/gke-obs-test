@@ -1,0 +1,4 @@
+# Ficheros de estado de réplicas generados localmente
+replicas.txt
+ss_replicas.txt
+statefulsets_replicas.txt
