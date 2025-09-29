@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tempo-ingress
+  namespace: monitoring # Assuming Tempo is in the 'monitoring' namespace
+  annotations:
+    cert-manager.io/issuer: "selfsigned-issuer" # Using the found Issuer
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC" # For OTLP gRPC
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - tempo.nettaro.com
+      secretName: tempo-tls
+  rules:
+    - host: tempo.nettaro.com
+      http:
+        paths:
+          # Path for OTLP HTTP traces
+          - path: /v1/traces
+            pathType: Prefix
+            backend:
+              service:
+                name: tempo-distributor # Name of the Tempo distributor service
+                port:
+                  number: 4318 # OTLP HTTP port
+          # Path for OTLP gRPC traces
+          - path: / # This path will catch all other requests, including gRPC
+            pathType: Prefix
+            backend:
+              service:
+                name: tempo-distributor # Name of the Tempo distributor service
+                port:
+                  number: 4317 # OTLP gRPC port
