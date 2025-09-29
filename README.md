@@ -1,164 +1,105 @@
+# GKE Observability Test - Generación y Envío de Telemetría
 
-# 📊 GKE Observability Stack (ArgoCD)
+Este proyecto demuestra cómo generar y enviar logs a Loki y trazas a Tempo desde una aplicación externa a un clúster de GKE, utilizando Nginx Ingress Controller y cert-manager para la exposición externa y la seguridad.
 
-Este repositorio contiene los manifiestos exportados de las aplicaciones de **observabilidad** desplegadas en un clúster de **Google Kubernetes Engine (GKE)** y gestionadas con **ArgoCD**.
+## Componentes de Observabilidad
 
-Incluye:
-- **Prometheus/Grafana** → Métricas y visualización
-- **Jaeger** → Trazas distribuidas
-- **Tempo** → Backend de trazas (compatible con Jaeger/OTel)
-- **Mimir** → Almacenamiento de métricas a largo plazo
-- **Loki** → Logs centralizados
-- **cert-manager** → Certificados TLS
+*   **Loki:** Sistema de agregación de logs de Grafana.
+*   **Tempo:** Sistema de almacenamiento de trazas distribuidas de Grafana.
+*   **Nginx Ingress Controller:** Gestiona el acceso externo a los servicios del clúster.
+*   **cert-manager:** Automatiza la gestión de certificados TLS.
 
----
+## Configuración de Kubernetes
 
-## 🌐 Acceso a los Servicios
+Para que la aplicación externa pueda comunicarse con Loki y Tempo, hemos configurado Ingresses para exponer estos servicios de forma segura.
 
-Todos los servicios están desplegados en el **namespace `monitoring`**  
-Para acceso local:
+### 1. Instalación del Nginx Ingress Controller
 
-```bash
-kubectl port-forward -n monitoring svc/<servicio> <puerto_local>:<puerto_servicio>
-````
-
-| Componente  | Puerto Local | Descripción                        | Ejemplo de acceso               |
-| ----------- | ------------ | ---------------------------------- | ------------------------------- |
-| **ArgoCD**  | `8080`       | Gestión de aplicaciones            | `http://localhost:8080`         |
-| **Grafana** | `3000`       | Dashboards de métricas/logs/trazas | `http://localhost:3000`         |
-| **Jaeger**  | `16686`      | Explorador de trazas               | `http://localhost:16686`        |
-| **Loki**    | `3100`       | API de logs (sin UI propia)        | `http://localhost:3100/metrics` |
-| **Tempo**   | `3200`       | Backend de trazas                  | `http://localhost:3200/metrics` |
-| **Mimir**   | `8082`       | Almacenamiento de métricas         | `http://localhost:8082/metrics` |
-
-> ⚠️ **Nota**: Los puertos locales pueden cambiar si ya están ocupados.
-> Ajusta el primer número del comando `port-forward` según necesites.
-
----
-
-## 🔑 Contraseña de ArgoCD
-
-Para obtener la contraseña inicial del usuario `admin`:
+Si aún no lo tienes instalado, el Nginx Ingress Controller es necesario. Se instaló usando Helm con los siguientes comandos:
 
 ```bash
-kubectl -n argocd get secret argocd-initial-admin-secret \
-  -o jsonpath="{.data.password}" | base64 -d && echo
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace ingress-nginx
 ```
 
-Luego accede en:
-👉 [http://localhost:8080](http://localhost:8080)
+### 2. Configuración de Ingress para Loki y Tempo
 
----
+Se han creado dos recursos Ingress para exponer Loki y Tempo:
 
-## 🚀 Escalar el Clúster para Ahorro de Costes
+*   **`loki-ingress.yaml`**: Expone Loki en `https://loki.nettaro.com`.
+*   **`tempo-ingress.yaml`**: Expone Tempo en `https://tempo.nettaro.com` para la ingesta de trazas OTLP (HTTP y gRPC).
 
-Cuando el clúster **no se usa**, podemos **poner las réplicas a 0** para ahorrar recursos.
-
-### 🔻 Escalar a 0 todos los Deployments
+Estos archivos se aplicaron al clúster:
 
 ```bash
-kubectl scale deploy --all -n monitoring --replicas=0
+kubectl apply -f loki-ingress.yaml
+kubectl apply -f tempo-ingress.yaml
 ```
 
-Esto detiene todos los pods, dejando solo los objetos definidos.
+### 3. Configuración de Argo CD para Tempo
 
-### 💾 Guardar el número de réplicas original (antes de escalar a 0)
+El archivo `tempo.yaml` (aplicación de Argo CD) fue modificado para incluir un archivo de valores personalizado (`tempo-custom-values.yaml`) que habilita el componente `gateway` de Tempo y su Ingress.
 
-Guarda las réplicas actuales en un archivo:
+**Es crucial que la aplicación `tempo` en Argo CD se sincronice correctamente** para que estos cambios se apliquen en el clúster.
+
+### 4. Configuración de DNS
+
+Debes configurar los registros DNS para los siguientes dominios, apuntándolos a la **dirección IP externa de tu Nginx Ingress Controller**:
+
+*   `loki.nettaro.com`
+*   `tempo.nettaro.com`
+
+Puedes obtener la IP externa de tu Ingress Controller con:
 
 ```bash
-kubectl get deploy -n monitoring \
-  -o jsonpath='{range .items[*]}{.metadata.name}{"="}{.spec.replicas}{"\n"}{end}' \
-  > replicas.txt
+kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
 ```
 
-El archivo tendrá este formato:
+### 5. Verificación de Certificados TLS
 
-```
-jaeger=1
-jaeger-operator=1
-mimir-distributor=1
-mimir-minio=1
-...
-```
-
-### 🔁 Restaurar las réplicas originales
-
-Cuando quieras volver a levantar los servicios:
+`cert-manager` se encarga de emitir los certificados TLS para `loki.nettaro.com` y `tempo.nettaro.com` utilizando el `selfsigned-issuer`. Puedes verificar el estado de los certificados con:
 
 ```bash
-while IFS="=" read -r deploy replicas; do
-  kubectl scale deploy $deploy -n monitoring --replicas=$replicas
-done < replicas.txt
+kubectl get certificate -n monitoring
 ```
 
----
+Asegúrate de que ambos certificados (`loki-tls` y `tempo-tls`) muestren `READY: True`.
 
-## 🧩 Descripción de los Componentes
+## Aplicación de Telemetría (Python)
 
-| Componente       | Rol                                                                         |
-| ---------------- | --------------------------------------------------------------------------- |
-| **Prometheus**   | Recolección de métricas del clúster y las aplicaciones.                     |
-| **Grafana**      | Visualización de métricas, logs y trazas en dashboards.                     |
-| **Jaeger**       | Sistema de trazas distribuidas para analizar requests entre microservicios. |
-| **Tempo**        | Backend de trazas, almacena y sirve trazas para Jaeger/OTel.                |
-| **Mimir**        | Almacenamiento de métricas a largo plazo, escalable y multi-tenant.         |
-| **Loki**         | Recolección y consulta de logs centralizados.                               |
-| **cert-manager** | Emisión automática de certificados TLS.                                     |
+Hemos creado una pequeña aplicación en Python (`send_telemetry.py`) para demostrar el envío de logs y trazas.
 
----
+### 1. Dependencias
 
-## ✅ Cómo Testear el Stack de Observabilidad
+Las dependencias necesarias están listadas en `requirements.txt`:
 
-1. **Métricas**:
+```
+python-loki
+opentelemetry-sdk
+opentelemetry-exporter-otlp-proto-http
+```
 
-   * Abre Grafana → [http://localhost:3000](http://localhost:3000)
-   * Login por defecto: `admin / admin` (o el que hayas configurado).
-   * Importa un dashboard de Prometheus para ver métricas del cluster.
+### 2. Ejecución de la Aplicación
 
-2. **Logs**:
+1.  **Navega al directorio del proyecto:**
+    ```bash
+    cd /Users/rubencarrasco/exported-apps
+    ```
+2.  **Instala las dependencias:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  **Ejecuta el script:**
+    ```bash
+    python send_telemetry.py
+    ```
 
-   * Desde Grafana → Data Sources → Loki.
-   * Ejecuta consultas tipo:
+El script enviará logs a `https://loki.nettaro.com/loki/api/v1/push` y trazas OTLP (HTTP) a `https://tempo.nettaro.com/v1/traces`. Estas URLs se pueden sobrescribir mediante las variables de entorno `LOKI_URL` y `TEMPO_OTLP_HTTP_ENDPOINT` respectivamente.
 
-     ```
-     {app="jaeger"}
-     ```
+## Verificación de Datos
 
-3. **Trazas**:
+Una vez que la aplicación Python se haya ejecutado, podrás verificar los logs y trazas en tu interfaz de Grafana, configurada para usar Loki y Tempo como fuentes de datos.
 
-   * Abre Jaeger → [http://localhost:16686](http://localhost:16686)
-   * Busca trazas por servicio o endpoint.
-
-4. **Mimir**:
-
-   * Comprueba el endpoint:
-     [http://localhost:8082/metrics](http://localhost:8082/metrics)
-
-5. **Tempo**:
-
-   * Comprueba que recibe trazas en:
-     [http://localhost:3200/metrics](http://localhost:3200/metrics)
-
----
-
-## 💡 Tips
-
-* Para habilitar rápidamente todos los servicios:
-
-  ```bash
-  kubectl scale deploy --all -n monitoring --replicas=1
-  ```
-
-  *(o ajusta los valores según `replicas.txt`)*
-
-* ArgoCD permite sincronizar los manifiestos con:
-
-  ```bash
-  kubectl get applications -n argocd
-  ```
-
-* Antes de hacer cambios, **actualiza este README y `replicas.txt`** para mantener un historial claro.
-
----
-
+*   **Logs en Loki:** Busca logs con la etiqueta `application=my-external-app`.
+*   **Trazas en Tempo:** Busca trazas generadas por el servicio `my-external-app`.
