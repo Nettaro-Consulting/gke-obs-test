@@ -24,6 +24,8 @@ spec:
           persistence:
             enabled: true
             size: 10Gi
+          service:
+            type: LoadBalancer # Added LoadBalancer service type
     repoURL: https://grafana.github.io/helm-charts
     targetRevision: 2.10.2
   syncPolicy:

@@ -21,9 +21,12 @@ spec:
           storageClassName: "standard"
           size: 10Gi
 
+        service:
+          type: LoadBalancer # Changed to LoadBalancer
+
         # Configuración del Ingress para exponer Grafana
         ingress:
-          enabled: false
+          enabled: false # Ensure Ingress is disabled
           ingressClassName: "gce"
           hosts:
             - grafana.localtest.me # Dominio para acceso local

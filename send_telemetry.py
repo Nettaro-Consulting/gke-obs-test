@@ -10,8 +10,8 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 
 # --- Configuration ---
-LOKI_URL = os.getenv("LOKI_URL", "https://loki.nettaro.com/loki/api/v1/push")
-TEMPO_OTLP_HTTP_ENDPOINT = os.getenv("TEMPO_OTLP_HTTP_ENDPOINT", "https://tempo.nettaro.com/v1/traces")
+LOKI_URL = os.getenv("LOKI_URL", "http://<LOKI_EXTERNAL_IP>:3100/loki/api/v1/push")
+TEMPO_OTLP_HTTP_ENDPOINT = os.getenv("TEMPO_OTLP_HTTP_ENDPOINT", "http://<TEMPO_DISTRIBUTOR_EXTERNAL_IP>:4318/v1/traces")
 SERVICE_NAME = "my-external-app"
 
 # --- Loki Logger Setup ---

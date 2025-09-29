@@ -1,6 +1,6 @@
 # Deployment de Stack de Observabilidad con Argo CD y Envío de Telemetría
 
-Este `README.md` detalla cómo desplegar el stack de observabilidad (Loki y Tempo) en un clúster de GKE utilizando Argo CD con el patrón "apps of apps", y cómo enviar telemetría (logs y trazas) a estos servicios.
+Este `README.md` detalla cómo desplegar el stack de observabilidad (Loki, Tempo y Grafana) en un clúster de GKE utilizando Argo CD con el patrón "apps of apps", y cómo enviar telemetría (logs y trazas) a estos servicios a través de servicios LoadBalancer.
 
 ## 1. Estructura del Repositorio
 
@@ -10,13 +10,10 @@ El repositorio está organizado para facilitar el despliegue con Argo CD utiliza
 .exported-apps/
 ├── argocd-apps/
 │   ├── all-observability-apps.yaml       # Aplicación padre de Argo CD (apps of apps)
+│   ├── grafana.yaml                      # Aplicación Argo CD para Grafana
 │   ├── jaeger-operator.yaml              # Aplicación Argo CD para Jaeger Operator
 │   ├── loki-stack.yaml                   # Aplicación Argo CD para Loki
-│   ├── observability-ingresses-app.yaml  # Aplicación Argo CD para los Ingresses
-│   ├── tempo.yaml                        # Aplicación Argo CD para Tempo
-│   └── ingresses/                        # Directorio con los manifiestos de Ingress
-│       ├── loki-ingress.yaml
-│       └── tempo-ingress.yaml
+│   └── tempo.yaml                        # Aplicación Argo CD para Tempo
 ├── requirements.txt                      # Dependencias de la aplicación Python
 ├── send_telemetry.py                     # Aplicación Python para enviar telemetría
 └── README.md                             # Este archivo
@@ -29,13 +26,6 @@ El repositorio está organizado para facilitar el despliegue con Argo CD utiliza
 Antes de proceder, asegúrate de tener lo siguiente en tu clúster de GKE:
 
 *   **Argo CD:** Instalado y configurado.
-*   **Nginx Ingress Controller:** Instalado y funcionando. Si no lo tienes, puedes instalarlo con Helm:
-    ```bash
-    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-    helm repo update
-    helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace ingress-nginx
-    ```
-*   **cert-manager:** Instalado y configurado, con un `Issuer` o `ClusterIssuer` llamado `selfsigned-issuer` (o el nombre que hayas configurado) en el namespace `monitoring`.
 
 ### Pasos de Deployment
 
@@ -47,27 +37,25 @@ Antes de proceder, asegúrate de tener lo siguiente en tu clúster de GKE:
     kubectl apply -f argocd-apps/all-observability-apps.yaml
     ```
 
-3.  **Verifica en la UI de Argo CD:** Accede a la interfaz de usuario de Argo CD. Deberías ver la aplicación `all-observability-apps` y, dentro de ella, las aplicaciones hijas (`loki-stack`, `jaeger-operator`, `tempo`, `observability-ingresses`). Asegúrate de que todas se sincronicen y estén `Healthy`.
+3.  **Verifica en la UI de Argo CD:** Accede a la interfaz de usuario de Argo CD. Deberías ver la aplicación `all-observability-apps` y, dentro de ella, las aplicaciones hijas (`grafana`, `loki-stack`, `jaeger-operator`, `tempo`). Asegúrate de que todas se sincronicen y estén `Healthy`.
 
 ### Configuración Post-Deployment
 
-1.  **Configuración de DNS:**
-    Debes configurar los registros DNS para los siguientes dominios, apuntándolos a la **dirección IP externa de tu Nginx Ingress Controller**:
+Los servicios de Grafana, Loki y Tempo se exponen a través de servicios `LoadBalancer`, lo que les asignará una IP externa a cada uno.
 
-    *   `loki.nettaro.com`
-    *   `tempo.nettaro.com`
-
-    Puedes obtener la IP externa de tu Ingress Controller con:
-    ```bash
-    kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
-    ```
-
-2.  **Verificación de Certificados TLS:**
-    `cert-manager` se encarga de emitir los certificados TLS para los dominios configurados. Puedes verificar su estado con:
-    ```bash
-    kubectl get certificate -n monitoring
-    ```
-    Asegúrate de que ambos certificados (`loki-tls` y `tempo-tls`) muestren `READY: True`.
+1.  **Obtener IPs Externas:**
+    *   **Grafana:**
+        ```bash
+        kubectl get svc grafana -n monitoring -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+        ```
+    *   **Loki:**
+        ```bash
+        kubectl get svc loki-stack -n monitoring -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+        ```
+    *   **Tempo (Distributor):**
+        ```bash
+        kubectl get svc tempo-distributor -n monitoring -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+        ```
 
 ## 3. Envío de Telemetría
 
@@ -95,19 +83,23 @@ opentelemetry-exporter-otlp-proto-http
     ```
 3.  **Ejecuta el script:**
     ```bash
+    # Reemplaza <LOKI_EXTERNAL_IP> y <TEMPO_DISTRIBUTOR_EXTERNAL_IP> con las IPs obtenidas
+    LOKI_URL="http://<LOKI_EXTERNAL_IP>:3100/loki/api/v1/push" \
+    TEMPO_OTLP_HTTP_ENDPOINT="http://<TEMPO_DISTRIBUTOR_EXTERNAL_IP>:4318/v1/traces" \
     python send_telemetry.py
     ```
 
-    El script enviará logs a `https://loki.nettaro.com/loki/api/v1/push` y trazas OTLP (HTTP) a `https://tempo.nettaro.com/v1/traces`.
-
-    Puedes sobrescribir estas URLs mediante las variables de entorno `LOKI_URL` y `TEMPO_OTLP_HTTP_ENDPOINT` respectivamente, por ejemplo:
-    ```bash
-    LOKI_URL="https://my-custom-loki.com/loki/api/v1/push" TEMPO_OTLP_HTTP_ENDPOINT="https://my-custom-tempo.com/v1/traces" python send_telemetry.py
-    ```
+    El script enviará logs y trazas a las IPs externas de Loki y Tempo.
 
 ## 4. Verificación de Datos
 
-Una vez que la aplicación Python se haya ejecutado, podrás verificar los logs y trazas en tu interfaz de Grafana, configurada para usar Loki y Tempo como fuentes de datos.
+Una vez que la aplicación Python se haya ejecutado, podrás verificar los logs y trazas en tu interfaz de Grafana.
 
-*   **Logs en Loki:** Busca logs con la etiqueta `application=my-external-app`.
-*   **Trazas en Tempo:** Busca trazas generadas por el servicio `my-external-app`.
+*   **Acceso a Grafana:** Abre tu navegador y ve a `http://<GRAFANA_EXTERNAL_IP>:80` (reemplaza con la IP obtenida).
+*   **Logs en Loki:** En Grafana, busca logs con la etiqueta `application=my-external-app`.
+*   **Trazas en Tempo:** En Grafana, busca trazas generadas por el servicio `my-external-app`.
+
+## Notas Importantes
+
+*   **Sin Seguridad TLS (HTTP):** La comunicación con estos servicios se realiza a través de HTTP sin cifrar. **Esto no es seguro y no se recomienda para entornos de producción.** Es adecuado para entornos de desarrollo o pruebas donde la seguridad no es una preocupación principal.
+*   **Credenciales de Grafana:** Si tu instancia de Grafana requiere autenticación, asegúrate de tener las credenciales correctas para acceder.

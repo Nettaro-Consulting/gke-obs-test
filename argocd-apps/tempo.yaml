@@ -20,6 +20,20 @@ spec:
     chart: tempo-distributed
     repoURL: https://grafana.github.io/helm-charts
     targetRevision: 1.48.0
+    helm:
+      values: |
+        distributor:
+          service:
+            type: LoadBalancer
+        queryFrontend:
+          service:
+            type: LoadBalancer
+        traces:
+          otlp:
+            http:
+              enabled: true
+            grpc:
+              enabled: true
   syncPolicy:
     automated:
       prune: true
