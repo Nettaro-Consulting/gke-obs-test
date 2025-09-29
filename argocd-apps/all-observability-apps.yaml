@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: all-observability-apps
+  namespace: argocd # Assuming Argo CD is installed in 'argocd' namespace
+spec:
+  project: default # Or your specific Argo CD project
+  source:
+    repoURL: https://github.com/Nettaro-Consulting/gke-obs-test.git # Your repository URL
+    targetRevision: main
+    path: argocd-apps # Path to the directory containing all child Application manifests
+    directory:
+      recurse: true # This tells Argo CD to look for Application manifests in subdirectories
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd # Child Applications are deployed in the same namespace as Argo CD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
