@@ -1,0 +1,61 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: grafana
+    targetRevision: 7.3.11
+    helm:
+      values: |
+        adminUser: admin
+        # Se recomienda cambiar la contraseña en un entorno de producción
+        # Puedes usar un secreto de Kubernetes en lugar de texto plano
+        adminPassword: "prom-operator"
+
+        persistence:
+          enabled: true
+          storageClassName: "standard"
+          size: 10Gi
+
+        # Configuración del Ingress para exponer Grafana
+        ingress:
+          enabled: false
+          ingressClassName: "gce"
+          hosts:
+            - grafana.localtest.me # Dominio para acceso local
+          # tls:
+          # - secretName: grafana-tls
+          #   hosts:
+          #     - grafana.localtest.me
+
+        # Configuración de las fuentes de datos (datasources)
+        datasources:
+          datasources.yaml:
+            apiVersion: 1
+            datasources:
+            - name: Prometheus
+              type: prometheus
+              url: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090
+              access: proxy
+              isDefault: true
+            - name: Loki
+              type: loki
+              url: http://loki-stack.monitoring.svc.cluster.local:3100
+              access: proxy
+            - name: Tempo
+              type: tempo
+              url: http://tempo-distributor.monitoring.svc.cluster.local:3200
+              access: proxy
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
