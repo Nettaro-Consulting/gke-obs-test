@@ -38,9 +38,23 @@ Grafana es la interfaz unificada para visualizar tus métricas, logs y trazas.
     *   **Loki:**
         *   Tipo: Loki
         *   URL: `http://loki-stack.monitoring.svc.cluster.local:3100`
+    ## 3. Acceso a Grafana (Visualización)
+
+Grafana es la interfaz unificada para visualizar tus métricas, logs y trazas.
+
+*   **URL de Acceso:** `https://grafana.nettaro.com`
+    *   Grafana se expone a través de un recurso Ingress dedicado (`grafana-ingress.yaml`).
+
+*   **Configuración de Fuentes de Datos en Grafana:**
+    Para visualizar los datos de Loki y Tempo, debes configurarlos como fuentes de datos en Grafana. Estas configuraciones ya están incluidas en el despliegue de Grafana a través de `datasources.yaml` en el Helm chart, apuntando a los servicios internos del clúster:
+    *   **Loki:**
+        *   Tipo: Loki
+        *   URL: `http://loki-stack.monitoring.svc.cluster.local:3100`
     *   **Tempo:**
         *   Tipo: Tempo
         *   URL: `http://tempo-distributor.monitoring.svc.cluster.local:3200` (o `http://tempo-query-frontend.monitoring.svc.cluster.local:3200` si se usa el query-frontend para consultas)
+
+    **Nota:** La URL para Tempo en la configuración de Grafana debería apuntar al `tempo-distributor` para la ingesta o al `tempo-query-frontend` para la consulta. El `tempo-distributor` es el que recibe las trazas, y el `tempo-query-frontend` es el que se usa para consultar. En la configuración actual del `grafana.yaml`, apunta al `tempo-distributor`.
 
     **Nota:** La URL para Tempo en la configuración de Grafana debería apuntar al `tempo-distributor` para la ingesta o al `tempo-query-frontend` para la consulta. El `tempo-distributor` es el que recibe las trazas, y el `tempo-query-frontend` es el que se usa para consultar. En la configuración actual del `grafana.yaml`, apunta al `tempo-distributor`.
 
