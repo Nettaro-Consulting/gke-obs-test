@@ -103,3 +103,10 @@ Una vez que la aplicación Python se haya ejecutado, podrás verificar los logs 
 
 *   **Logs en Loki:** Busca logs con la etiqueta `application=my-external-app`.
 *   **Trazas en Tempo:** Busca trazas generadas por el servicio `my-external-app`.
+
+   1. Configured Ingress resources for Loki and Tempo, exposing them via loki.nettaro.com and tempo.nettaro.com respectively, with TLS certificates managed
+      by cert-manager.
+   2. Created a Python application (send_telemetry.py) that sends sample logs to Loki and traces to Tempo using OpenTelemetry.
+   3. Created a README.md file with detailed instructions on how to set up the Kubernetes configurations, run the Python application, and verify the
+      telemetry data.
+   4. Pushed all the changes to your Git repository https://github.com/Nettaro-Consulting/gke-obs-test.git.
